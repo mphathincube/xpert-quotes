@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quote History - Xpert Auto Upholstery</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'add_quote' %}">Add Quote</a>
+        <a href="{% url 'client_list' %}">View Clients</a>
+        <a href="{% url 'quote_history' %}" class="active">View Quote History</a>
+    </div>
+    <div class="content">
+        <h1>Quote History</h1>
+        <form method="post">
+            {% csrf_token %}
+            <p>
+                <label for="client">Select Client:</label>
+                <select name="client" id="client">
+                    <option value="">-- Select a Client --</option>
+                    {% for client in clients %}
+                        <option value="{{ client.id }}" {% if client == selected_client %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="search">Search Quotes (by Client or Service):</label>
+                <input type="text" name="search" id="search" placeholder="Enter keyword..." />
+            </p>
+            <button type="submit">View Quotes</button>
+        </form>
+
+        {% if selected_client or search_query %}
+            <h2>Quotes{% if selected_client %} for {{ selected_client.name }}{% endif %}</h2>
+            {% if quotes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Price (R)</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in quotes %}
+                            <tr>
+                                <td>{{ quote.client.name }}</td>
+                                <td>{{ quote.service }}</td>
+                                <td>{{ quote.price }}</td>
+                                <td>{{ quote.created_at }}</td>
+                                <td>
+                                    <a href="{% url 'generate_quote_pdf' quote.id %}" class="button">Download PDF</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No quotes found{% if selected_client %} for {{ selected_client.name }}{% endif %}{% if search_query %} matching "{{ search_query }}"{% endif %}.</p>
+            {% endif %}
+        {% else %}
+            <p>Please select a client or enter a search term to view quote history.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

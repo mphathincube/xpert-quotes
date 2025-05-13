@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Quote - Xpert Auto Upholstery</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'add_quote' %}" class="active">Add Quote</a>
+        <a href="{% url 'client_list' %}">View Clients</a>
+        <a href="{% url 'quote_history' %}">View Quote History</a>
+    </div>
+    <div class="content">
+        <h1>Create a Quote</h1>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %};">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <h2>Add a New Client</h2>
+            <p>Fill this section only if you want to add a new client. Leave blank to use an existing client.</p>
+            <p>
+                Name: <input type="text" name="name" value="{{ client_form.name.value|default_if_none:'' }}" />
+                {% if client_form.name.errors %}
+                    <span style="color: red;">{{ client_form.name.errors }}</span>
+                {% endif %}
+            </p>
+            <p>
+                Email: <input type="email" name="email" value="{{ client_form.email.value|default_if_none:'' }}" />
+                {% if client_form.email.errors %}
+                    <span style="color: red;">{{ client_form.email.errors }}</span>
+                {% endif %}
+            </p>
+            <p>
+                Phone: <input type="text" name="phone" value="{{ client_form.phone.value|default_if_none:'' }}" />
+                {% if client_form.phone.errors %}
+                    <span style="color: red;">{{ client_form.phone.errors }}</span>
+                {% endif %}
+            </p>
+            <h2>Create a Quote</h2>
+            <p>Either select an existing client below or add a new client above.</p>
+            <p>
+                {{ quote_form.client.label_tag }}
+                <select name="client" id="id_client" class="select2">
+                    <option value="">-- Select a Client --</option>
+                    {% for client in quote_form.client.field.queryset %}
+                        <option value="{{ client.id }}" {% if client.id|stringformat:"s" == quote_form.client.value|stringformat:"s" %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if quote_form.client.errors %}
+                    <span style="color: red;">{{ quote_form.client.errors }}</span>
+                {% endif %}
+            </p>
+            <p>
+                {{ quote_form.service.label_tag }}
+                <br>
+                {{ quote_form.service }}
+                {% if quote_form.service.errors %}
+                    <span style="color: red;">{{ quote_form.service.errors }}</span>
+                {% endif %}
+            </p>
+            <p>
+                {{ quote_form.price.label_tag }}
+                {{ quote_form.price }}
+                {% if quote_form.price.errors %}
+                    <span style="color: red;">{{ quote_form.price.errors }}</span>
+                {% endif %}
+            </p>
+            <button type="submit">Save Quote</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Search for a client...",
+                allowClear: true
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client List - Xpert Auto Upholstery</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'add_quote' %}">Add Quote</a>
+        <a href="{% url 'client_list' %}" class="active">View Clients</a>
+        <a href="{% url 'quote_history' %}">View Quote History</a>
+    </div>
+    <div class="content">
+        <h1>Client List</h1>
+        <form method="get">
+            <p>
+                <input type="text" name="search" placeholder="Search by name, email, phone..." value="{{ search_query }}">
+                <button type="submit">Search</button>
+            </p>
+        </form>
+        {% if clients %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Created At</th>
+                </tr>
+                {% for client in clients %}
+                    <tr>
+                        <td><a href="{% url 'client_detail' client.id %}">{{ client.name }}</a></td>
+                        <td>{{ client.email|default:"N/A" }}</td>
+                        <td>{{ client.phone|default:"N/A" }}</td>
+                        <td>{{ client.created_at|date:"F d, Y, g:i a" }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No clients found. Try adjusting your search.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

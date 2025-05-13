@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client Details - Xpert Auto Upholstery</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'add_quote' %}">Add Quote</a>
+        <a href="{% url 'client_list' %}" class="active">View Clients</a>
+        <a href="{% url 'quote_history' %}">View Quote History</a>
+    </div>
+    <div class="content">
+        <h1>Client Details: {{ client.name }}</h1>
+        <p><strong>Email:</strong> {{ client.email|default:"N/A" }}</p>
+        <p><strong>Phone:</strong> {{ client.phone|default:"N/A" }}</p>
+      
+        <h2>Quotes for {{ client.name }}</h2>
+        {% if quotes %}
+            <table>
+                <tr>
+                    <th>Service</th>
+                    <th>Car Registration</th>
+                    <th>Price (R)</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+                {% for quote in quotes %}
+                    <tr>
+                        <td>{{ quote.service }}</td>
+                        <td>{{ quote.car.car_reg|default:"N/A" }}</td>
+                        <td>{{ quote.price }}</td>
+                        <td>{{ quote.created_at|date:"F d, Y, g:i a" }}</td>
+                        <td>
+                            <a href="{% url 'edit_quote' quote.id %}" class="button">Edit</a>
+                            <a href="{% url 'generate_quote_pdf' quote.id %}" class="button">Download PDF</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No quotes found for this client.</p>
+        {% endif %}
+        <a href="{% url 'client_list' %}" class="button">Back to Client List</a>
+    </div>
+</body>
+</html>

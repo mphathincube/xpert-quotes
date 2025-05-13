@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Quote - Xpert Auto Upholstery</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'add_quote' %}">Add Quote</a>
+        <a href="{% url 'client_list' %}" class="active">View Clients</a>
+        <a href="{% url 'quote_history' %}">View Quote History</a>
+    </div>
+    <div class="content">
+        <h1>Edit Quote for {{ quote.client.name }}</h1>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <!-- Hidden input for client to preserve its value -->
+            <input type="hidden" name="client" value="{{ quote.client.id }}">
+            <p>
+                <label for="id_service">Service:</label>
+                {{ form.service }}
+                {% if form.service.errors %}
+                    <span class="error">{{ form.service.errors }}</span>
+                {% endif %}
+            </p>
+            <!-- <p>
+                <label for="id_car">Car (optional, select if applicable):</label>
+                {{ form.car }}
+                {% if form.car.errors %}
+                    <span class="error">{{ form.car.errors }}</span>
+                {% endif %}
+            </p> -->
+            <p>
+                <label for="id_price">Price (R):</label>
+                {{ form.price }}
+                {% if form.price.errors %}
+                    <span class="error">{{ form.price.errors }}</span>
+                {% endif %}
+            </p>
+            <h3>Add New Car Registration (if needed)</h3>
+            <p>
+                <label for="id_car_reg">Car Registration:</label>
+                {{ car_form.car_reg }}
+                {% if car_form.car_reg.errors %}
+                    <span class="error">{{ car_form.car_reg.errors }}</span>
+                {% endif %}
+            </p>
+            {% if form.non_field_errors or car_form.non_field_errors %}
+                <div class="error">
+                    {{ form.non_field_errors }}
+                    {{ car_form.non_field_errors }}
+                </div>
+            {% endif %}
+            <button type="submit">Save Changes</button>
+            <a href="{% url 'client_detail' quote.client.id %}" class="button">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
