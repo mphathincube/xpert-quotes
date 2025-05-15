@@ -27,7 +27,7 @@ A Django-based web application built to help Xpert Auto Upholstery manage client
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/xpert-quotes.git
+git clone https://github.mphathincube/xpert-quotes.git
 cd xpert-quotes
 ```
 
