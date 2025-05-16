@@ -113,7 +113,9 @@ python manage.py runserver
 ## 🔮 Future Enhancements
 
 - Add delete option for clients and quotes
+- Add Company address and Car details
 - Add quote status (Pending, Approved, Rejected)
+- Auto genate an invoice when a qoute is approved
 - Export client data to CSV
 - Add pagination for large lists
 - Create a dashboard with quote statistics
